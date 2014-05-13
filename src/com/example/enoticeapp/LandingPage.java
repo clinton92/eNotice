@@ -13,12 +13,15 @@ public class LandingPage extends Activity{
         setContentView(R.layout.layout_landing);
        
 	}
+	
 	public void login(View view){
 		myIntent = new Intent(this, UserLogin.class);
 		startActivity(myIntent);
 	}
+	
 	public void register(View view){
 		myIntent = new Intent(this, Register.class);
 		startActivity(myIntent);
 	}
+	
 }

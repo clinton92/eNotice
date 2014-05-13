@@ -6,8 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.app.Activity;
-import android.app.AlertDialog;
+//import android.app.AlertDialog;
 import android.app.ProgressDialog;
 
 public class Register extends Activity{
@@ -16,6 +17,7 @@ public class Register extends Activity{
 	Validator obj;
 	boolean validPass,validUser;
 	ProgressDialog progressBar;
+	String str;
 	//AlertDialog.Builder alertBuilder;
 	
 	@Override
@@ -33,12 +35,18 @@ public class Register extends Activity{
 		obj = new Validator();
 		validPass = obj.validatePass(pass.getText().toString());
 		validUser = obj.validateUser(user.getText().toString());
-		if(!validUser)
-			new AlertDialog.Builder(this).setTitle("UserName").setMessage("Please enter a valid username").setNeutralButton("Close", null).show();
+		if(!validUser){
+			str = "Please enter a valid username.";
+			Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+			//new AlertDialog.Builder(this).setTitle("UserName").setMessage("Please enter a valid username").setNeutralButton("Close", null).show();
 			//userMsg.setText("Please enter a valid username");
-		if(!validPass)
-			new AlertDialog.Builder(this).setTitle("Password").setMessage("Please enter a valid password.").setNeutralButton("Close", null).show();
+		}
+		if(!validPass){
+			//new AlertDialog.Builder(this).setTitle("Password").setMessage("Please enter a valid password.").setNeutralButton("Close", null).show();
 			//passMsg.setText("Please enter a valid password");
+			str = "Please enter a valid password";
+			Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+		}
 		if(validPass && validUser){
 		
 			new RegisteringUser().execute("Hello");

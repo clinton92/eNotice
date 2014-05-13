@@ -10,5 +10,6 @@
     <string name="register">Register</string>
     <string name="classname">Class</string>
     <string name="class_prompt">Choose your Class</string>
+    <string name="noticedetail">Notice Details</string>
 
 </resources>

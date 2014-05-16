@@ -20,8 +20,10 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
 	TextView tv1,tv2;
 	private SimpleGestureFilter detector;
 	public static int position;
+	public static int num;
 	Intent myIntent;
 	HashMap<String,String> map;
+	//DashBoard dashObj = new DashBoard();
 	//klkl
 
 	@Override
@@ -74,7 +76,9 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
             	str = "Swipe Left";
             	myIntent = getIntent();
             	myIntent.getIntExtra("position",position);
+            	myIntent.getIntExtra("num", num);
             	Log.d("position left swipe",""+position);
+            	if(position<=num)
             	position++;
             	Log.d("position left swipe after increment",""+position);
             	nextActivity(position);
@@ -94,6 +98,7 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
 	 
 	 public void nextActivity(int position){
 		 //if(position>=0){
+		 
 	      map = DashBoard.getNoticeFromHashMap(position);
 	      myIntent.putExtra("title", map.get("title"));
 	      myIntent.putExtra("description",map.get("description"));
@@ -107,7 +112,7 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
         Toast.makeText(this, "Double Tap", Toast.LENGTH_SHORT).show();
      }
      
-     /* For Up navigation i.e switching to the parent activity*/
+     /* For Up navigation i.e switching to the parent activity on swiping*/
      @Override
      public boolean onOptionsItemSelected(MenuItem item) {
          switch (item.getItemId()) {

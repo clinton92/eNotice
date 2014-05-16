@@ -21,7 +21,7 @@ public class OfflineData extends SQLiteOpenHelper {
 	public static String id = "id";
 	public static String title = "title";
 	public static String desc = "description";
-	private String strQuery = "CREATE TABLE "+table+" ( "+id+" INTEGER PRIMARY KEY AUTOINCREMENT,"
+	private String strQuery = "CREATE TABLE IF NOT EXISTS "+table+" ( "+id+" INTEGER PRIMARY KEY AUTOINCREMENT,"
 			+" "+title+" TEXT, "
 			+" "+desc+" TEXT)";
 	@Override

@@ -24,4 +24,9 @@ public class LandingPage extends Activity{
 		startActivity(myIntent);
 	}
 	
+	public void forget(View view){
+		myIntent = new Intent(this,ForgetPassword.class);
+		startActivity(myIntent);
+	}
+	
 }

@@ -2,8 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <LinearLayout 
+    android:orientation="vertical" 
+    android:padding="10dp">
+    <EditText 
+            android:id="@+id/first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/first"/>
+    <EditText 
+            android:id="@+id/last"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/last"/>
+    <EditText 
+            android:id="@+id/user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/user"/>
+    <EditText 
+            android:id="@+id/pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pass"
+            android:inputType="textPassword"/>
+    <EditText 
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"/>
+    <EditText 
+            android:id="@+id/mob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/mob"/>
+    
+    <!-- <LinearLayout 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -65,12 +98,13 @@
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:textColor="#FF0000"/>
-    </LinearLayout>
+    </LinearLayout>-->
     <Button
         android:id="@+id/register"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="@string/register"
-        android:onClick="registerUser"/>   
+        android:onClick="registerUser"
+        android:layout_gravity="center"/>   
 
 </LinearLayout>

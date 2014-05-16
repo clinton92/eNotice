@@ -46,7 +46,7 @@ public class DashBoard extends ListActivity{
 	public static ArrayList<HashMap<String, String>> noticesList = new ArrayList<HashMap<String, String>>();
 	public static HashMap<String,String> map;
 	// url to get all products list
-	private static String url_all_notices = "http://192.168.43.165/get_notices.php";
+	private static String url_all_notices = "http://192.168.43.165/get_notices.php?flag=";
 	// JSON Node names
 	private static final String TAG_SUCCESS = "success";
 	private static final String TAG_NOTICE = "notice";
@@ -54,13 +54,16 @@ public class DashBoard extends ListActivity{
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ID = "id";
 	private static final String LIST_POSITION = "position";
+	private static final String LIST_NUM= "num";
 	//private static final String LIST_INSTANCE_STATE = "list_state";
 	private static final String TAG_DESC = "description";
 	private String title=null;
 	private String description=null;
 	private String id = null;
-	
-
+	SQLiteDatabase myDb;
+	Cursor myCursor;
+	private static int flag;
+	private static int num;
 	OfflineData sqlHelper = new OfflineData(this, OfflineData.database, null, OfflineData.database_version);
 	
 	// products JSONArray
@@ -76,29 +79,25 @@ public class DashBoard extends ListActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_dash_board);
 		
-		SQLiteDatabase myDb = sqlHelper.getWritableDatabase();
-    	//String rollno = ((EditText)findViewById(R.id.rollNo)).getText().toString();
-		// Get listview
-        
+		myDb = sqlHelper.getWritableDatabase();
+    	myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table, null);
+    	flag = myCursor.getCount();
+    	Log.d("Flag",""+flag);
+    	if(noticesList!=null)
+    		noticesList.clear();
+    	if(map!=null)
+    		map.clear();
     	
-    	Cursor myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table, null);
-    	//if ( myCursor == null ) {
-    		new LoadAllNotices().execute();
-    		//myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table+"("+OfflineData.id+", "+OfflineData.title+", "+OfflineData.desc+") VALUES("+ title+", "+description+")",null);
-    		ContentValues content = new ContentValues();
-        	content.put(OfflineData.title, title);
-        	content.put(OfflineData.desc, description);
-        	myDb.insert(OfflineData.table, null, content);
-    	//}
-    	//else {
-    		if (myCursor !=null){
+    	new LoadAllNotices().execute(flag,null,null);
+    	if (myCursor.getCount()!=0){
     		myCursor.moveToFirst();
     		do {
     			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
     		}while(myCursor.moveToNext());
-    		
-    		
-    	}
+    	  		
+    	}else
+    		Log.d("Empty","empty");
+    	
     		ListView lv = getListView();
         
  
@@ -117,6 +116,7 @@ public class DashBoard extends ListActivity{
                 in.putExtra(TAG_TITLE,map.get(TAG_TITLE));
                 in.putExtra(TAG_DESC, map.get(TAG_DESC));
                 in.putExtra(LIST_POSITION,position);
+                in.putExtra(LIST_NUM, num);
                 // starting new activity and expecting some response back
                 startActivity(in);
             }
@@ -126,7 +126,7 @@ public class DashBoard extends ListActivity{
 	 /**
      * Background Async Task to Load all notices by making HTTP Request
      * */
-    class LoadAllNotices extends AsyncTask<String, String, String> {
+    class LoadAllNotices extends AsyncTask<Integer, String, String> {
  
         /**
          * Before starting background thread Show Progress Dialog
@@ -146,11 +146,13 @@ public class DashBoard extends ListActivity{
          * Getting All Notices from URL
          * 
          */
-        protected String doInBackground(String... args) {
+        protected String doInBackground(Integer... args) {
             
             String str=null;
             HttpResponse response;
             HttpClient myClient = new DefaultHttpClient();
+            Integer flag = args[0];
+            url_all_notices+=""+flag;
             HttpPost myConnection = new HttpPost(url_all_notices);
             
             try {
@@ -188,14 +190,15 @@ public class DashBoard extends ListActivity{
         					description = myObj2.getString("description");
         					Log.d(TAG, "Description: "+description);
         					
-        					 // creating new HashMap
-                            HashMap<String, String> map = new HashMap<String, String>();
-     
-                            // adding each child node to HashMap key => value
-                            map.put(TAG_ID, id);
-                            map.put(TAG_TITLE, title);
-                            map.put(TAG_DESC, description);
-                            noticesList.add(map);
+        					//updating local db
+        					
+        					myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table+"("+OfflineData.title+", "+OfflineData.desc+") VALUES('"+ title+"', '"+description+"')",null);
+        		    		ContentValues content = new ContentValues();
+        		        	content.put(OfflineData.title, title);
+        		        	content.put(OfflineData.desc, description);
+        		        	myDb.insert(OfflineData.table, null, content);
+        					
+        					
         					
         				}
         			}else{
@@ -214,11 +217,26 @@ public class DashBoard extends ListActivity{
         }
  
         /**
-         * After completing backgrouListView lv = getListView();nd task Dismiss the progress dialog
+         * After completing background task Dismiss the progress dialog
          * **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
             pDialog.dismiss();
+            
+            //Fetching data from local db
+            myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table,null);
+            myCursor.moveToFirst();
+            //HashMap<String, String> map; 
+    		do {
+    			HashMap<String, String> map = new HashMap<String, String>();
+    			map.put(TAG_ID, ""+myCursor.getInt(0));
+                map.put(TAG_TITLE, myCursor.getString(1));
+                map.put(TAG_DESC, myCursor.getString(2));
+                noticesList.add(map);
+    			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
+    		}while(myCursor.moveToNext());
+            
+        	
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -232,8 +250,8 @@ public class DashBoard extends ListActivity{
                             new int[] { R.id.title, R.id.description });
                     // updating listview
                     setListAdapter(adapter);
+                    num=adapter.getCount();
                     
-                    //mListView.onRestoreInstanceState(mListInstanceState);
                 }
             });
  

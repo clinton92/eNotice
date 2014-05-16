@@ -2,16 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:orientation="horizontal">
-    <TextView
-        android:id="@+id/textView1"
+    android:orientation="vertical"
+    android:paddingTop="60dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+     >
+
+    <Switch
+        android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/user" />
+        android:textOff="Email" 
+        android:textOn="Username"
+        android:layout_gravity="center"/>
 
     <EditText
         android:id="@+id/user"
@@ -19,38 +22,40 @@
         android:layout_height="wrap_content"
         android:ems="10" 
         android:hint="@string/user"
+        android:drawableLeft="@drawable/user2"
+        
         >
 
         <requestFocus />
     </EditText>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-		   
-		<TextView
-        	android:id="@+id/textView2"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/pass" />
+   
         <EditText
             android:id="@+id/pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10" 
-            android:hint="@string/pass"/>        
-     
+            android:hint="@string/pass"
+            android:inputType="textPassword"
+            android:drawableLeft="@drawable/password"
+            android:paddingLeft="10dp"
+            />    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#7ec0ee"
+        android:text="Forget Password?"
+        android:layout_gravity="right"
+        android:onClick="forget"
         
-
-    </LinearLayout>
+    />    
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login" 
-        android:onClick="login"/>
+        android:onClick="login"
+        android:layout_gravity="center"
+        android:radius="5dp"/>
     
 </LinearLayout>

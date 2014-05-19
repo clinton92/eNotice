@@ -18,12 +18,16 @@ import org.json.JSONObject;
 
 
 
+
+
+
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +38,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class DashBoard extends ListActivity{
@@ -59,13 +65,14 @@ public class DashBoard extends ListActivity{
 	private static final String TAG_DESC = "description";
 	private String title=null;
 	private String description=null;
-	private String id = null;
+	private Integer id = null;
 	SQLiteDatabase myDb;
 	Cursor myCursor;
-	private static int flag;
+	private static int flag=0;
 	private static int num;
 	OfflineData sqlHelper = new OfflineData(this, OfflineData.database, null, OfflineData.database_version);
 	
+	TextView title1,description1;
 	// products JSONArray
 	JSONArray products = null;
 	
@@ -77,11 +84,18 @@ public class DashBoard extends ListActivity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_dash_board);
+		setContentView(R.layout.layout_dash_board);//
+		Toast.makeText(this, "ping 1", Toast.LENGTH_LONG).show();
+		Log.d("ping1", "1");
 		
-		myDb = sqlHelper.getWritableDatabase();
-    	myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table, null);
-    	flag = myCursor.getCount();
+		myDb = sqlHelper.getReadableDatabase();
+    	myCursor = myDb.rawQuery("SELECT flag from flag", null);
+    	//flag=myCursor.getCount();
+    	int flag_num= myCursor.getCount();
+    	if(flag_num>0){
+    	flag = myCursor.getInt(0);
+    	}
+    	
     	Log.d("Flag",""+flag);
     	if(noticesList!=null)
     		noticesList.clear();
@@ -109,6 +123,14 @@ public class DashBoard extends ListActivity{
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
             	map = noticesList.get(position);
+            	title1 = (TextView) view.findViewById(R.id.title);
+            	description1 = (TextView) view.findViewById(R.id.description);
+                if (title1 != null&& description1!=null)
+                {
+                    title1.setTypeface(null,Typeface.NORMAL);
+                    description1.setTypeface(null, Typeface.NORMAL);
+
+                }
                 // Starting new intent
                 Intent in = new Intent(getApplicationContext(),
                         ShowNotice.class);
@@ -184,23 +206,26 @@ public class DashBoard extends ListActivity{
         					JSONObject myObj2 = myArray.getJSONObject(i);
         					title = myObj2.getString("title");
         					Log.d(TAG, "Title: "+title);
-        					id = myObj2.getString("id");
+        					id = Integer.parseInt(myObj2.getString("id"));
         					Log.d(TAG, "Id: "+id);
         					
         					description = myObj2.getString("description");
         					Log.d(TAG, "Description: "+description);
-        					
+        					flag=id;
         					//updating local db
         					
-        					myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table+"("+OfflineData.title+", "+OfflineData.desc+") VALUES('"+ title+"', '"+description+"')",null);
+        					myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table1+"("+OfflineData.title+", "+OfflineData.desc+") VALUES('"+ title+"', '"+description+"')",null);
         		    		ContentValues content = new ContentValues();
         		        	content.put(OfflineData.title, title);
         		        	content.put(OfflineData.desc, description);
-        		        	myDb.insert(OfflineData.table, null, content);
+        		        	myDb.insert(OfflineData.table1, null, content);
         					
         					
         					
         				}
+        				myDb = sqlHelper.getWritableDatabase();
+        		    	myCursor = myDb.rawQuery("INSERT INTO flag VALUES("+flag+")", null);
+        				
         			}else{
         				Log.d(TAG,"Not Successfull");
         			}
@@ -209,7 +234,7 @@ public class DashBoard extends ListActivity{
         	}
         	catch(JSONException e)
         	{
-        		e.printStackTrace();ListView lv = getListView();
+        		e.printStackTrace();//ListView lv = getListView();
         		
         	}
         	
@@ -224,7 +249,7 @@ public class DashBoard extends ListActivity{
             pDialog.dismiss();
             
             //Fetching data from local db
-            myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table,null);
+            myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table1,null);
             myCursor.moveToFirst();
             //HashMap<String, String> map; 
     		do {
@@ -232,7 +257,7 @@ public class DashBoard extends ListActivity{
     			map.put(TAG_ID, ""+myCursor.getInt(0));
                 map.put(TAG_TITLE, myCursor.getString(1));
                 map.put(TAG_DESC, myCursor.getString(2));
-                noticesList.add(map);
+                noticesList.add(map);//
     			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
     		}while(myCursor.moveToNext());
             

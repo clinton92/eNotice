@@ -19,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:text="title"/>    
+        android:text="title"
+        android:textStyle="bold|italic"/>    
      
      <TextView 
         android:id="@+id/description"
@@ -28,6 +29,7 @@
         android:singleLine="true"
         android:textColorHighlight="#000000"
         android:text="description"
+        android:textStyle="italic"
         /> 
     </LinearLayout>
      <LinearLayout 

@@ -31,12 +31,14 @@ public final class R {
         public static final int user2=0x7f020004;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0018;
+        public static final int action_settings=0x7f0a001a;
         public static final int address=0x7f0a0004;
         public static final int button1=0x7f0a000b;
         public static final int button2=0x7f0a000c;
+        public static final int checkBox1=0x7f0a0016;
+        public static final int date=0x7f0a0019;
         public static final int deal=0x7f0a0009;
-        public static final int description=0x7f0a0017;
+        public static final int description=0x7f0a0018;
         public static final int email=0x7f0a0011;
         public static final int first=0x7f0a000d;
         public static final int imageView1=0x7f0a000a;
@@ -53,7 +55,7 @@ public final class R {
         public static final int textView5=0x7f0a0001;
         public static final int textView6=0x7f0a0005;
         public static final int textView7=0x7f0a0003;
-        public static final int title=0x7f0a0016;
+        public static final int title=0x7f0a0017;
         public static final int user=0x7f0a000f;
         public static final int valid=0x7f0a0000;
     }

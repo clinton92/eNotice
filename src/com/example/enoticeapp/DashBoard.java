@@ -1,10 +1,14 @@
 package com.example.enoticeapp;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
+//import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -13,6 +17,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+
+
 
 
 
@@ -58,6 +65,7 @@ public class DashBoard extends ListActivity{
 	private static final String TAG_NOTICE = "notice";
 	private static final String TAG_NOTICES = "notices";
 	private static final String TAG_TITLE = "title";
+	private static final String TAG_DATE = "date";
 	private static final String TAG_ID = "id";
 	private static final String LIST_POSITION = "position";
 	private static final String LIST_NUM= "num";
@@ -66,10 +74,15 @@ public class DashBoard extends ListActivity{
 	private String title=null;
 	private String description=null;
 	private Integer id = null;
+	private String datetime=null;
+	//SimpleDateFormat timeFormat
 	SQLiteDatabase myDb;
+	Date myDate;
+	String date;
 	Cursor myCursor;
 	private static int flag=0;
 	private static int num;
+	SimpleDateFormat formatter,timeFormat = new SimpleDateFormat("HH:mm:ss"), dateFormat = new SimpleDateFormat("dd/mm/yy");
 	OfflineData sqlHelper = new OfflineData(this, OfflineData.database, null, OfflineData.database_version);
 	
 	TextView title1,description1;
@@ -85,32 +98,52 @@ public class DashBoard extends ListActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_dash_board);//
-		Toast.makeText(this, "ping 1", Toast.LENGTH_LONG).show();
+		///Toast.makeText(this, "ping 1", Toast.LENGTH_LONG).show();
 		Log.d("ping1", "1");
 		
 		myDb = sqlHelper.getReadableDatabase();
-    	myCursor = myDb.rawQuery("SELECT flag from flag", null);
-    	//flag=myCursor.getCount();
-    	int flag_num= myCursor.getCount();
-    	if(flag_num>0){
-    	flag = myCursor.getInt(0);
-    	}
+    	/*myCursor = myDb.rawQuery("SELECT * from flag", null);
+    	Log.d("hello","hello");
+    	int cnt=myCursor.getCount();
+    	Log.d("row count :",""+cnt);
+    	if(myCursor.moveToFirst())
+		do {
+			Log.d("Dashboard SQLite", ""+myCursor.getInt(0));	
+			flag = myCursor.getInt(myCursor.getColumnIndex("flag"));
+		}while(myCursor.moveToNext());
     	
-    	Log.d("Flag",""+flag);
-    	if(noticesList!=null)
+    	Log.d("Fetched flag Testing...",""+flag);*/
+    	//flag=myCursor.getCount();
+    	//int flag_num= myCursor.getCount();
+    	//if(flag_num>0){
+    	
+    	//}
+    	//else
+    	//	flag=0;
+    	
+    	//Log.d("Flag",""+flag);
+    	if(noticesList!=null)//
     		noticesList.clear();
     	if(map!=null)
     		map.clear();
     	
-    	new LoadAllNotices().execute(flag,null,null);
+    	//int static lastid=0;
+    	
+    	//Showing local db entries
+    	myCursor = myDb.rawQuery("SELECT * FROM notices", null);
     	if (myCursor.getCount()!=0){
     		myCursor.moveToFirst();
     		do {
     			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
+    			flag=myCursor.getInt(0);
     		}while(myCursor.moveToNext());
     	  		
     	}else
     		Log.d("Empty","empty");
+    	
+    	
+    	Toast.makeText(getApplicationContext(), ""+flag, Toast.LENGTH_LONG).show();
+    	new LoadAllNotices().execute(flag,null,null);
     	
     		ListView lv = getListView();
         
@@ -165,7 +198,7 @@ public class DashBoard extends ListActivity{
         }
  
         /**
-         * Getting All Notices from URL
+         * Getting All Notices from URLarg0
          * 
          */
         protected String doInBackground(Integer... args) {
@@ -173,9 +206,12 @@ public class DashBoard extends ListActivity{
             String str=null;
             HttpResponse response;
             HttpClient myClient = new DefaultHttpClient();
-            Integer flag = args[0];
-            url_all_notices+=""+flag;
-            HttpPost myConnection = new HttpPost(url_all_notices);
+            int fl =args[0];
+            String uri= url_all_notices+fl;
+            Log.d("details",url_all_notices);
+            //Toast.makeText(getApplicationContext() , url_all_notices, Toast.LENGTH_LONG).show();
+            //Toast.makeText(, url_all_notices, Toast.LENGTH_LONG).show();
+            HttpPost myConnection = new HttpPost(uri);
             
             try {
             	response = myClient.execute(myConnection);
@@ -187,7 +223,7 @@ public class DashBoard extends ListActivity{
                 e.printStackTrace();
             }
             
-            JSONObject json,myObj;
+            JSONObject json,myObj;//
         	JSONArray jsonArray,myArray;
         	String TAG="JSON Data";
             
@@ -211,30 +247,57 @@ public class DashBoard extends ListActivity{
         					
         					description = myObj2.getString("description");
         					Log.d(TAG, "Description: "+description);
-        					flag=id;
-        					//updating local db
+        					datetime = myObj2.getString("date");
+        					formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        					try{
+        						myDate = formatter.parse(datetime);
+        						if(myDate==new Date())
+        							date = timeFormat.format(myDate.getTime());
+        						else
+        							date = dateFormat.format(myDate);
+        						
+        						Log.d(date,date);
         					
-        					myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table1+"("+OfflineData.title+", "+OfflineData.desc+") VALUES('"+ title+"', '"+description+"')",null);
-        		    		ContentValues content = new ContentValues();
-        		        	content.put(OfflineData.title, title);
-        		        	content.put(OfflineData.desc, description);
-        		        	myDb.insert(OfflineData.table1, null, content);
+        					}
+        					catch(ParseException e){
+        						e.printStackTrace();
+        					}
+        					//flag=id;
+        					//updating local db
+        					insertNoticeInLocalDB();
         					
         					
         					
         				}
-        				myDb = sqlHelper.getWritableDatabase();
-        		    	myCursor = myDb.rawQuery("INSERT INTO flag VALUES("+flag+")", null);
+
         				
         			}else{
         				Log.d(TAG,"Not Successfull");
         			}
         		}
-        		
+				/*myDb = sqlHelper.getWritableDatabase();
+				Log.d("new flag",""+flag);
+		    	myCursor = myDb.rawQuery("UPDATE flag set flag="+flag, null);
+		    	Log.d("updated flag",""+flag);*/
+		    	
+		    	//Check immediately
+		    	/*myDb = sqlHelper.getReadableDatabase();
+		    	myCursor = myDb.rawQuery("SELECT * from flag", null);
+		    	Log.d("hello","hello");
+		    	int cnt=myCursor.getCount();
+		    	Log.d("row count :",""+cnt);
+		    	if(myCursor.moveToFirst())
+				do {
+					Log.d("Dashboard SQLite", ""+myCursor.getString(myCursor.getColumnIndex("flag")));	
+					flag = myCursor.getInt(0);
+				}while(myCursor.moveToNext());
+		    	
+		    	Log.d("Fetched flag Testing...",""+flag);*/
+		    	
         	}
         	catch(JSONException e)
         	{
-        		e.printStackTrace();//ListView lv = getListView();
+        		e.printStackTrace();
         		
         	}
         	
@@ -257,8 +320,9 @@ public class DashBoard extends ListActivity{
     			map.put(TAG_ID, ""+myCursor.getInt(0));
                 map.put(TAG_TITLE, myCursor.getString(1));
                 map.put(TAG_DESC, myCursor.getString(2));
+                map.put(TAG_DATE,myCursor.getString(3));
                 noticesList.add(map);//
-    			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
+    			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2)+", "+myCursor.getString(3));
     		}while(myCursor.moveToNext());
             
         	
@@ -267,12 +331,12 @@ public class DashBoard extends ListActivity{
                 public void run() {
                     /**
                      * Updating parsed JSON data into ListView
-                     * */
+                     */
                    ListAdapter adapter = new SimpleAdapter(
-                            DashBoard.this, noticesList,
+                            DashBoard.this, noticesList,//
                             R.layout.list_item, new String[] { TAG_TITLE,
-                                    TAG_DESC},
-                            new int[] { R.id.title, R.id.description });
+                                    TAG_DESC, TAG_DATE},
+                            new int[] { R.id.title, R.id.description, R.id.date });
                     // updating listview
                     setListAdapter(adapter);
                     num=adapter.getCount();
@@ -280,6 +344,14 @@ public class DashBoard extends ListActivity{
                 }
             });
  
+        }
+        private void insertNoticeInLocalDB(){
+        	myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table1+"("+OfflineData.title+", "+OfflineData.desc+", "+OfflineData.date+") VALUES('"+ title+"', '"+description+"', '"+date+"')",null);
+    		ContentValues content = new ContentValues();
+        	content.put(OfflineData.title, title);
+        	content.put(OfflineData.desc, description);
+        	content.put(OfflineData.date, date);
+        	myDb.insert(OfflineData.table1, null, content);
         }
  
     }

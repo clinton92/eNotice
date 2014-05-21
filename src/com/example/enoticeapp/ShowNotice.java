@@ -13,7 +13,10 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class ShowNotice extends Activity implements SimpleGestureListener{
@@ -22,6 +25,9 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
 	public static int position;
 	public static int num;
 	Intent myIntent;
+	SQLiteDatabase myDb;
+	OfflineData sqlHelper = new OfflineData(this, OfflineData.database, null, OfflineData.database_version);
+	Cursor myCursor;
 	HashMap<String,String> map;
 	//DashBoard dashObj = new DashBoard();
 	//klkl
@@ -41,13 +47,44 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
 		tv1 = (TextView)findViewById(R.id.textView1);
 		tv2 = (TextView)findViewById(R.id.textView2);
 		Intent myIntent = getIntent();
-		if(myIntent.hasExtra("title")){
+		/*if(myIntent.hasExtra("title")){
 			tv1.setText(myIntent.getStringExtra("title"));
 		}
 		if(myIntent.hasExtra("description")){
 			tv2.setText(myIntent.getStringExtra("description"));
+		}*/
+		if(myIntent.hasExtra("id")){
+			//int id = myIntent.getIntExtra("TAG_ID",);
+			int id=myIntent.getIntExtra("id", 0);
+			Log.d("Received in Intent",""+id);
+			getDataFromLocalDB(id);
 		}
 		
+	}
+	public void getDataFromLocalDB(int id){
+		myDb = sqlHelper.getReadableDatabase();
+		Log.d("Received Id in Local db function",""+id);
+		myCursor = myDb.rawQuery("SELECT * FROM notices where id="+id, null);
+		myCursor.moveToFirst();
+		Log.d("title",myCursor.getString(1));
+		tv1.setText(myCursor.getString(1));
+		Log.d("desc",myCursor.getString(2));
+		tv2.setText(myCursor.getString(2));
+		/*
+		myDb = sqlHelper.getReadableDatabase();
+		myCursor = myDb.rawQuery("SELECT * FROM notices", null);*//*
+    	if (myCursor.getCount()!=0){
+    		myCursor.moveToFirst();
+    		do {
+    			Log.d("Dashboard shownotice", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
+    			tv1.setText(myCursor.getString(1));
+    	//		flag=myCursor.getInt(0);
+    		}while(myCursor.moveToNext());
+    	  		
+    	}else
+    		Log.d("Empty","empty");
+    		*/
+    	
 	}
 	
 	@Override

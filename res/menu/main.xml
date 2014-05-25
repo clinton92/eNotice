@@ -4,8 +4,19 @@
 	    android:actionViewClass="android.widget.SearchView" 
 	    android:icon="@android:drawable/ic_menu_search" 
 	    android:id="@+id/menu_item_search" 
-	    android:showAsAction="ifRoom" 
+	    android:showAsAction="always" 
 	    android:title="Search">
-</item>    
+	    </item>
+	    <item
+        android:id="@+id/menu_load"
+        android:icon="@drawable/ic_action_refresh"
+        android:orderInCategory="200"
+        android:showAsAction="ifRoom"
+        android:title="Load"/>
+	    <item
+	        android:id="@+id/post"
+	        android:icon="@android:drawable/ic_menu_search"
+	        android:showAsAction="always"
+	        android:title="Post"/>
 
 </menu>

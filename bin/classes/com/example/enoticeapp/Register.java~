@@ -118,9 +118,9 @@ public class Register extends Activity{
 				gcm = GoogleCloudMessaging.getInstance(this);
 				regid = getRegistrationId(context);
 				Log.d("GCM Register",regid);
-				//if(!regid.isEmpty()){
+				if(!regid.isEmpty()){
 					new RegisteringUser().execute();
-				//}
+				}
 				
 			}
 			///new RegisteringUser().execute("Hello");

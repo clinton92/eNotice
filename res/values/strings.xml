@@ -15,5 +15,9 @@
     <string name="last">Last Name</string>
     <string name="mob">Mobile Number</string>
     <string name="email">abc@xyz.com</string>
+    <string name="photo">Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
 
 </resources>

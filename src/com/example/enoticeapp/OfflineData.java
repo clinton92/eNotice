@@ -27,21 +27,23 @@ public class OfflineData extends SQLiteOpenHelper {
 	public static String title = "title";
 	public static String desc = "description";
 	public static String date = "date";
+	public static String filepath="filepath";
+	public static String status="status";
 	private String strQuery = "CREATE TABLE IF NOT EXISTS "+table1+" ( "+id+" INTEGER PRIMARY KEY AUTOINCREMENT,"
 			+" "+title+" TEXT, "
 			+" "+desc+" TEXT, "
-			+" "+date+" TEXT)";
-	private String strQuery2 = "CREATE TABLE IF NOT EXISTS "+table2+" ( flag INTEGER )";
-	private String strQuery3 = "INSERT INTO "+table2+" VALUES(0)";
+			+" "+date+" TEXT, "
+			+" "+filepath+" TEXT, "
+			+" "+status+" TEXT)";
 	
 	//Following method get called only once when database is created.
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.d("OfflineData","onCreate called");
 		
-		db.execSQL(strQuery2);
+		
 		db.execSQL(strQuery);
-		db.execSQL(strQuery3);
+		
 		Log.d("OfflineData","Table Created");
 	}
 

@@ -27,6 +27,8 @@ import android.widget.EditText;
 
 
 
+import android.widget.Toast;
+
 //import java.io.BufferedReader;
 //import java.io.InputStreamReader;
 import java.util.*;
@@ -92,11 +94,14 @@ public class UserLogin extends Activity {
     		    			myArray = json.getJSONArray("user_data");
     		    			JSONObject obj = myArray.getJSONObject(0);
     		    			user_type= obj.getInt("user_type");
-    		    			if(user_type==2){
+    		    			//if(user_type==2){
     		    				Intent myIntent = new Intent(UserLogin.this,DashBoard.class);
+    		    				myIntent.putExtra("user_type",""+user_type );
     		    				startActivity(myIntent);
-    		    			}
+    		    			//}
     		    		}
+    		    		else
+    		    			Toast.makeText(UserLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
     		    	}
     		    	catch(JSONException e){
     		    		Log.d(JSON_TAG,"Exception: ");

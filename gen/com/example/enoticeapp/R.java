@@ -24,42 +24,50 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_enotice=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int password=0x7f020002;
-        public static final int user=0x7f020003;
-        public static final int user2=0x7f020004;
+        public static final int attachment=0x7f020000;
+        public static final int ic_action_refresh=0x7f020001;
+        public static final int ic_enotice=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int password=0x7f020004;
+        public static final int user=0x7f020005;
+        public static final int user2=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a001d;
+        public static final int action_settings=0x7f0a0023;
         public static final int address=0x7f0a0004;
-        public static final int button1=0x7f0a000b;
-        public static final int button2=0x7f0a000c;
-        public static final int checkBox1=0x7f0a0016;
-        public static final int date=0x7f0a001a;
+        public static final int button1=0x7f0a000c;
+        public static final int button2=0x7f0a000d;
+        public static final int checkBox1=0x7f0a0019;
+        public static final int date=0x7f0a001b;
         public static final int deal=0x7f0a0009;
-        public static final int description=0x7f0a0019;
-        public static final int email=0x7f0a0011;
-        public static final int first=0x7f0a000d;
-        public static final int imageView1=0x7f0a000a;
-        public static final int item_delete=0x7f0a001b;
-        public static final int last=0x7f0a000e;
-        public static final int menu_item_search=0x7f0a001c;
-        public static final int mob=0x7f0a0012;
+        public static final int description=0x7f0a000f;
+        public static final int email=0x7f0a0014;
+        public static final int first=0x7f0a0010;
+        public static final int gallery=0x7f0a0021;
+        public static final int imageView1=0x7f0a000b;
+        public static final int item_delete=0x7f0a001d;
+        public static final int last=0x7f0a0011;
+        public static final int list=0x7f0a000a;
+        public static final int menu_item_search=0x7f0a001e;
+        public static final int menu_load=0x7f0a001f;
+        public static final int mob=0x7f0a0015;
         public static final int name=0x7f0a0008;
-        public static final int noticeId=0x7f0a0017;
-        public static final int pass=0x7f0a0010;
-        public static final int register=0x7f0a0013;
-        public static final int switch1=0x7f0a0015;
+        public static final int noticeId=0x7f0a001a;
+        public static final int pass=0x7f0a0013;
+        public static final int photo=0x7f0a0022;
+        public static final int post=0x7f0a0020;
+        public static final int progressBar2=0x7f0a001c;
+        public static final int register=0x7f0a0016;
+        public static final int switch1=0x7f0a0018;
         public static final int textView1=0x7f0a0007;
-        public static final int textView2=0x7f0a0014;
+        public static final int textView2=0x7f0a0017;
         public static final int textView3=0x7f0a0006;
         public static final int textView4=0x7f0a0002;
         public static final int textView5=0x7f0a0001;
         public static final int textView6=0x7f0a0005;
         public static final int textView7=0x7f0a0003;
-        public static final int title=0x7f0a0018;
-        public static final int user=0x7f0a000f;
+        public static final int title=0x7f0a000e;
+        public static final int user=0x7f0a0012;
         public static final int valid=0x7f0a0000;
     }
     public static final class integer {
@@ -70,30 +78,37 @@ public final class R {
         public static final int layout_dash_board=0x7f030001;
         public static final int layout_forgotpass=0x7f030002;
         public static final int layout_landing=0x7f030003;
-        public static final int layout_register=0x7f030004;
-        public static final int layout_shownotice=0x7f030005;
-        public static final int layout_user_login=0x7f030006;
-        public static final int list_item=0x7f030007;
+        public static final int layout_post=0x7f030004;
+        public static final int layout_register=0x7f030005;
+        public static final int layout_shownotice=0x7f030006;
+        public static final int layout_user_login=0x7f030007;
+        public static final int list_item=0x7f030008;
+        public static final int progressbar=0x7f030009;
     }
     public static final class menu {
         public static final int contextual_menu=0x7f090000;
         public static final int main=0x7f090001;
-        public static final int user_login=0x7f090002;
+        public static final int post_main=0x7f090002;
+        public static final int user_login=0x7f090003;
     }
     public static final class string {
         public static final int action_settings=0x7f070001;
         public static final int app_name=0x7f070000;
         public static final int class_prompt=0x7f070008;
         public static final int classname=0x7f070007;
+        public static final int description=0x7f070011;
         public static final int email=0x7f07000d;
         public static final int first=0x7f07000a;
+        public static final int gallery=0x7f07000f;
         public static final int hello_world=0x7f070002;
         public static final int last=0x7f07000b;
         public static final int login=0x7f070005;
         public static final int mob=0x7f07000c;
         public static final int noticedetail=0x7f070009;
         public static final int pass=0x7f070004;
+        public static final int photo=0x7f07000e;
         public static final int register=0x7f070006;
+        public static final int title=0x7f070010;
         public static final int user=0x7f070003;
     }
     public static final class style {

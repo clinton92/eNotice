@@ -19,26 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -61,6 +43,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.ImageView;
 //import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -71,6 +56,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,12 +68,15 @@ import android.widget.AdapterView.OnItemLongClickListener;
 //import com.example.enoticeapp.ActionMode;
 import android.view.ActionMode;
 
-public class DashBoard extends ListActivity implements OnQueryTextListener{
+public class DashBoard extends Activity implements OnQueryTextListener{
 	
 	// Progress Dialog
 	private ProgressDialog pDialog;
 	ListView mListView;
-	ListAdapter adapter;
+	 MenuItem menuItem;
+	public ArrayList<Integer> idArray=new ArrayList<Integer>();
+	//ListAdapter adapter;
+	ArrayAdapter<HashMap<String,String>> adapter;
 	CheckBox c;
 	// Creating JSON Parser object
 	//JSONParser jParser = new JSONParser();
@@ -104,12 +93,15 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
 	private static final String TAG_ID = "id";
 	private static final String LIST_POSITION = "position";
 	private static final String LIST_NUM= "num";
+	private static final String TAG_FILEPATH="filepath";
 	//private static final String LIST_INSTANCE_STATE = "list_state";
 	private static final String TAG_DESC = "description";
 	private String title=null;
 	private String description=null;
 	private Integer id = null;
 	private String datetime=null;
+	private static int count=0;
+	private static String filepath;
 	//SimpleDateFormat timeFormat
 	SQLiteDatabase myDb;
 	Date myDate;
@@ -126,63 +118,98 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
 	TextView title1,description1;
 	// products JSONArray
 	JSONArray products = null;
+	ArrayAdapter<HashMap<String,String>> adapter2;
 	
 	// Hashmap for ListView
 	public static HashMap<String,String> getNoticeFromHashMap(int key) {
 	        return noticesList.get(key);
 	}
-	 MultiChoiceModeListener mMultiChoiceModeListener;
+	
 	 
-	    @Override
-	    protected void onStart() {
-	        super.onStart();
-	 
-	        /** For contextual action mode, the choice mode should be CHOICE_MODE_MULTIPLE_MODAL */
-	        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-	 
-	        /** Setting multichoicemode listener for the listview */
-	        getListView().setMultiChoiceModeListener(mMultiChoiceModeListener);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		int user=-1;
+		// Inflate the menu; this adds items to the action bar if it is present.
+	    getMenuInflater().inflate(R.menu.main, menu);
+	    Intent myIntent =getIntent();
+	    if(myIntent.hasExtra("user_type")){
+	    	user=Integer.parseInt(myIntent.getStringExtra("user_type"));
+	    	
 	    }
-	 
-	    @Override
-	    public boolean onCreateOptionsMenu(Menu menu) {
-	     // Inflate the menu; this adds items to the action bar if it is present.
-	     getMenuInflater().inflate(R.menu.main, menu);
-	     SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
-	           SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+	    if(user==2)
+	    	{MenuItem mymenu = menu.findItem(R.id.post);
+	    	mymenu.setVisible(false);
+	    	}
+	    SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
+	    SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+	    //lv.setTextFilterEnabled(true);
+	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+	    searchView.setSubmitButtonEnabled(true);
+	    searchView.setOnQueryTextListener(this);
+	    return super.onCreateOptionsMenu(menu);
+	 }
+	
 	    
-	           searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	           searchView.setSubmitButtonEnabled(true);
-	           searchView.setOnQueryTextListener(this);
-	    
-	           return super.onCreateOptionsMenu(menu);
+	 @Override
+	 public boolean onQueryTextChange(String newText){
+		 // this is your adapter that will be filtered
+		 if (TextUtils.isEmpty(newText)){
+			//lv.clearTextFilter();
+	        //lv.setAdapter(adapter);
+	        	 
+	     }
+	     else{
+	        //((ArrayAdapter<HashMap<String,String>>)lv.getAdapter()).getFilter().filter(newText);
+	        /*lv.setFilterText(newText.toString());
+	        int textlength = newText.length();
+	        ArrayList<HashMap<String,String>> tempArrayList = new ArrayList<HashMap<String,String>>();
+	        for(HashMap<String,String> c: tempArrayList){
+	               if (textlength <= c.get("title").length()) {
+	                    if (c.get("title").toLowerCase().contains(newText.toString().toLowerCase())) {
+	                       tempArrayList.add(c);
+	                    }
+	               }
+	        }
+	              adapter2 = new MyListAdapter(this,tempArrayList);
+	              lv.setAdapter(adapter2);*/
+	              
 	    }
-	    
-	    @Override
-	    public boolean onQueryTextChange(String newText)
-	    {
-	     // this is your adapter that will be filtered
-	         if (TextUtils.isEmpty(newText))
-	         {
-	               lv.clearTextFilter();
-	           }
-	         else
-	         {
-	               lv.setFilterText(newText.toString());
-	           }
-	            
-	         return true;
-	    }
+	    return true;
+	}
 	    
 	    @Override
 	    public boolean onQueryTextSubmit(String query) {
 	     // TODO Auto-generated method stub
+	    //menu.findItem(R.id.menu_item_search).collapseActionView();
 	     return false;
 	    }
+	   
+	    @Override
+	    public boolean onOptionsItemSelected(MenuItem item) {
+	      switch (item.getItemId()) {
+	      case R.id.menu_load:
+	        menuItem = item;
+	        menuItem.setActionView(R.layout.progressbar);
+	        menuItem.expandActionView();
+	         new LoadAllNotices().execute(flag,null,null);
+	        //task.execute("test");
+	        break;
+	      case R.id.post:
+	    	  Intent myIntent = new Intent(this,PostNotice.class);
+	    	  startActivity(myIntent);
+	      default:
+	        break;
+	      }
+	      return true;
+	    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_dash_board);//
+		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
+	        | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
 		///Toast.makeText(this, "ping 1", Toast.LENGTH_LONG).show();
 		Log.d("ping1", "1");
 		
@@ -192,13 +219,16 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
     		noticesList.clear();
     	if(map!=null)
     		map.clear();
+    	if(count>0)
+    		count=0;
     	
     	//Showing local db entries in Log and setting flag with last id.
     	myCursor = myDb.rawQuery("SELECT * FROM notices", null);
+    	//myDb.close();
     	if (myCursor.getCount()!=0){
     		myCursor.moveToFirst();
     		do {
-    			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
+    			//Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
     			flag=myCursor.getInt(0);
     		}while(myCursor.moveToNext());
     	  		
@@ -209,109 +239,11 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
     	Toast.makeText(getApplicationContext(), ""+flag, Toast.LENGTH_LONG).show();
     	new LoadAllNotices().execute(flag,null,null);
     	
-    	lv = getListView();
-    	lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-    	lv.setTextFilterEnabled(true);
-
-    		
-    		
-    		/** Defining a multichoicemodelistener for the listview. */
-           /* mMultiChoiceModeListener = new MultiChoiceModeListener() {
-     
-                @Override
-                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                    return false;
-                }
-     
-                @Override
-                public void onDestroyActionMode(ActionMode mode) {
-                }
-     
-                /** This will be invoked when action mode is created. In our case , it is on long clicking a menu item */
-             /*   @Override
-                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    getMenuInflater().inflate(R.menu.contextual_menu, menu);
-                    return true;
-                }
-     
-                /** Invoked when an action in the action mode is clicked */
-               /* @Override
-                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    Toast.makeText(getBaseContext(), "Applying "+ item.getTitle() + " on "+ getListView().getCheckedItemCount() + " Rivers \n" + getCheckedItems(), Toast.LENGTH_LONG).show();
-                    return false;
-                }
-               @Override
-                public void onItemCheckedStateChanged(ActionMode arg0, int arg1, long arg2, boolean arg3) {
-                  
-                 //final int checkedCount = lv.getCheckedItemCount();
-                 arg0.setTitle("1 Selected");
-                 //adapter.toggleSelection(arg1);
-                }/*
-                @Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					// 	TODO Auto-generated method stub
-
-					if(isChecked)
-						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack());
-					else
-						mActionMode.finish();
-				}*/
-                
-            //};
-            
-         		
-        lv.setOnItemClickListener(new OnItemClickListener() {
- 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-            	TextView myId =(TextView) view.findViewById(R.id.noticeId);
-            	int myid=Integer.parseInt(myId.getText().toString());
-            	Log.d("Id of clicked item",""+myid);
-            	//map = noticesList.get(position);
-            	
-            	title1 = (TextView) view.findViewById(R.id.title);
-            	description1 = (TextView) view.findViewById(R.id.description);
-                if (title1 != null&& description1!=null)
-                {
-                    title1.setTypeface(null,Typeface.NORMAL);
-                    description1.setTypeface(null, Typeface.NORMAL);
-
-                }
-                /*CheckBox checkbox =(CheckBox) view.findViewById(R.id.checkBox1);
-        		if(checkbox!=null){
-        			checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            	  
-        				@Override
-        				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        					// 	TODO Auto-generated method stub
-      
-        					if(isChecked)
-        						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack());
-        					else
-        						mActionMode.finish();
-        				}
-        			});
-        		}*/
-                
-                // Starting new intent
-                Intent in = new Intent(getApplicationContext(),
-                        ShowNotice.class);
-                
-                in.putExtra("id",myid);
-                in.putExtra(LIST_POSITION,position);
-                startActivity(in);
-            	
-            	
-            }
-        });
-       
-       
-        
-       
+    	
+    	
         
      }
-	 
+	
 	
 	 /**
      * Background Async Task to Load all notices by making HTTP Request
@@ -324,6 +256,11 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+        	if(noticesList!=null)//
+        		noticesList.clear();
+        	if(map!=null)
+        		map.clear();
             pDialog = new ProgressDialog(DashBoard.this);
             pDialog.setMessage("Loading notices. Please wait...");
             pDialog.setIndeterminate(false);
@@ -381,6 +318,7 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
         					Log.d(TAG, "Id: "+id);
         					
         					description = myObj2.getString("description");
+        					filepath =myObj2.getString("filepath");
         					Log.d(TAG, "Description: "+description);
         					datetime = myObj2.getString("date");
         					formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -428,8 +366,11 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
             // dismiss the dialog after getting all products
             pDialog.dismiss();
             
+            
             //Fetching data from local db
+            myDb = sqlHelper.getReadableDatabase();
             myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table1,null);
+            //myDb.close();
             myCursor.moveToFirst();
             //HashMap<String, String> map; 
     		do {
@@ -438,39 +379,188 @@ public class DashBoard extends ListActivity implements OnQueryTextListener{
                 map.put(TAG_TITLE, myCursor.getString(1));
                 map.put(TAG_DESC, myCursor.getString(2));
                 map.put(TAG_DATE,myCursor.getString(3));
+                map.put(TAG_FILEPATH,myCursor.getString(4));
                 noticesList.add(map);//
     			Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2)+", "+myCursor.getString(3));
+    			flag=myCursor.getInt(0);
     		}while(myCursor.moveToNext());
             
-        	
-            // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     */
-                    adapter = new SimpleAdapter(
-                            DashBoard.this, noticesList,//
-                            R.layout.list_item, new String[] { TAG_ID, TAG_TITLE,
-                                    TAG_DESC, TAG_DATE},
-                            new int[] { R.id.noticeId, R.id.title, R.id.description, R.id.date });
-                    // updating listview
-                    setListAdapter(adapter);
-                    num=adapter.getCount();
-                    
+    		 adapter=new MyListAdapter(DashBoard.this,noticesList);
+        	lv= (ListView) findViewById(R.id.list);
+    		lv.setAdapter(adapter);
+    		lv.setTextFilterEnabled(true);
+    	//lv.getCheckedItemPositions();
+        	if(menuItem!=null){
+    		menuItem.collapseActionView();
+            menuItem.setActionView(null);}
+    		lv.setOnItemClickListener(new OnItemClickListener() {
+    			//lv.getListView(); 
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                        int position, long id) {
+                	TextView myId =(TextView) view.findViewById(R.id.noticeId);
+                	int myid=Integer.parseInt(myId.getText().toString());
+                	Log.d("Id of clicked item",""+myid);
+                	//map = noticesList.get(position);
+                	
+
+                	SparseBooleanArray pos=lv.getCheckedItemPositions();
+                	Log.d("Sparse Array",""+pos);
+                	title1 = (TextView) view.findViewById(R.id.title);
+                	description1 = (TextView) view.findViewById(R.id.description);
+                    if (title1 != null&& description1!=null)
+                    {
+                        title1.setTypeface(null,Typeface.NORMAL);
+                        description1.setTypeface(null, Typeface.NORMAL);
+
+                    }
+                   // Starting new intent
+                   Intent in = new Intent(getApplicationContext(),
+                                         ShowNotice.class);
+                   in.putExtra(TAG_ID,myid);
+                   in.putExtra(LIST_POSITION,position);
+                   startActivity(in);
                 }
-            });
- 
+           });
+    		
         }
         private void insertNoticeInLocalDB(){
-        	myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table1+"("+OfflineData.title+", "+OfflineData.desc+", "+OfflineData.date+") VALUES('"+ title+"', '"+description+"', '"+date+"')",null);
+        	myDb = sqlHelper.getWritableDatabase();
+        	//myCursor = myDb.rawQuery("INSERT INTO "+OfflineData.table1+"("+OfflineData.title+", "+OfflineData.desc+", "+OfflineData.date+", "+OfflineData.filepath+", "+OfflineData.status+") VALUES('"+ title+"', '"+description+"', '"+date+"', '"+filepath+"', 'N')",null);
     		ContentValues content = new ContentValues();
         	content.put(OfflineData.title, title);
         	content.put(OfflineData.desc, description);
         	content.put(OfflineData.date, date);
+        	content.put(OfflineData.filepath, filepath);
+        	content.put(OfflineData.status, "N");
         	myDb.insert(OfflineData.table1, null, content);
+        	//myDb.close();
         }
  
     }
+ private class MyListAdapter extends ArrayAdapter<HashMap<String,String>>
+	{ 
+    	Context mContext;
+    	TextView noticeId;
+    	ArrayList<HashMap<String,String>> noticesList;
+		public MyListAdapter(Context mContext, ArrayList<HashMap<String,String>> noticesList)
+		{
+			super(DashBoard.this,R.layout.list_item,noticesList);
+			this.mContext=mContext;
+			this.noticesList=noticesList;
+		}
 
-}
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			
+			View itemView=convertView;
+			//Log.d("View",""+itemView);
+			map=noticesList.get(position);
+			LayoutInflater mInflater;
+		
+			mInflater = ((Activity)mContext).getLayoutInflater();
+			itemView = mInflater.inflate(R.layout.list_item, parent, false);
+			
+			TextView tv=(TextView)itemView.findViewById(R.id.title);
+			if(tv!=null)
+			tv.setText(map.get("title"));
+			
+			TextView description=(TextView)itemView.findViewById(R.id.description);
+			description.setText(map.get("description"));
+			
+			TextView date=(TextView)itemView.findViewById(R.id.date);
+			date.setText(map.get("date"));
+			
+			noticeId=(TextView)itemView.findViewById(R.id.noticeId);
+			noticeId.setText(map.get(TAG_ID));
+			//lv=getListView();
+			CheckBox checkbox =(CheckBox) itemView.findViewById(R.id.checkBox1);
+    		if(checkbox!=null){
+    			checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        	  
+    				@Override
+    				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    					// 	TODO Auto-generated method stub
+  
+    					if(isChecked){
+    						count++;
+    						idArray.add(Integer.parseInt(noticeId.getText().toString()));
+    						Log.d("Added id",""+idArray);
+    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count, idArray));
+    					}
+    					else{
+    						if(count>0){
+    							//int pos=position;
+    							count--;
+    							idArray.remove(new Integer(Integer.parseInt(noticeId.getText().toString())));
+    							Log.d("Removed id",""+idArray);
+    							}
+    						//	
+    						if(count>0){
+    							
+    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count,idArray));}
+    						else{
+    						mActionMode.finish();}
+    					}
+    				}
+    			
+    		});
+    		}
+    	return itemView;
+    }
+			
+	}
+ }	/*
+		
+		 @Override
+         public Filter getFilter() {
+             Filter filter = new Filter() {
+
+                 @SuppressWarnings("unchecked")
+                 @Override
+                 protected void publishResults(CharSequence constraint,FilterResults results) {
+
+                     map = (ArrayList<HashMap<String,String>>) results.values; // has the filtered values
+                     notifyDataSetChanged();  // notifies the data with new filtered values
+                 }
+
+                 @Override
+                 protected FilterResults performFiltering(CharSequence constraint) {
+                     FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
+                     HashMap<String,String> FilteredArrList = new HashMap<String,String>();
+
+                     if (noticesList == null) {
+                         mOriginalValues = new HashMap<String,String>(map); // saves the original data in mOriginalValues
+                     }
+
+                     /********
+                      * 
+                      *  If constraint(CharSequence that is received) is null returns the mOriginalValues(Original) values
+                      *  else does the Filtering and returns FilteredArrList(Filtered)  
+                      *
+                      ********/
+           /*          if (constraint == null || constraint.length() == 0) {
+
+                         // set the Original result to return  
+                         results.count = mOriginalValues.size();
+                         results.values = mOriginalValues;
+                     } else {
+                         constraint = constraint.toString().toLowerCase();
+                         for (int i = 0; i < mOriginalValues.size(); i++) {
+                             String data = mOriginalValues.get(i);
+                             if (data.toLowerCase().startsWith(constraint.toString())) {
+                                 FilteredArrList.add(data);
+                             }
+                         }
+                         // set the Filtered result to return
+                         results.count = FilteredArrList.size();
+                         results.values = FilteredArrList;
+                     }
+                     return results;
+                 }
+             };
+             return filter;
+         }*/
+		
+
+

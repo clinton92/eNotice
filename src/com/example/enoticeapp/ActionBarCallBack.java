@@ -1,6 +1,7 @@
 package com.example.enoticeapp;
 
 import java.util.ArrayList;
+
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -10,9 +11,11 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+//import com.example.enoticeapp.DashBoard;
 
 public class ActionBarCallBack implements ActionMode.Callback {
 	int count;
+	//OfflineData sqlHelper = new OfflineData(DashBoard.this, OfflineData.database, null, OfflineData.database_version);
 	public ArrayList<Integer> idArray=new ArrayList<Integer>();
 	ListView lv;
 	public ActionBarCallBack(int count,ListView lv){
@@ -41,7 +44,8 @@ public class ActionBarCallBack implements ActionMode.Callback {
     	for(int i=0;i<idArray.size();i++)
     		Log.d("Checked Ids: ",""+idArray.get(i));
     	
-        return false;
+    	
+        return true;
     }
 
     @Override

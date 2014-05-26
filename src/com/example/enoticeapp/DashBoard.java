@@ -234,7 +234,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
     			//Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
     			flag=myCursor.getInt(0);
     		}while(myCursor.moveToNext());
-    	  		
+    	  		Toast.makeText(this, ""+flag, Toast.LENGTH_SHORT).show();
     	}else
     		Log.d("Empty","empty");
     	
@@ -401,6 +401,10 @@ public class DashBoard extends Activity implements OnQueryTextListener{
                 	int myid=Integer.parseInt(myId.getText().toString());
                 	Log.d("Id of clicked item",""+myid);
                 	//map = noticesList.get(position);
+                	if(count>0)
+                		count=0;
+                	if(mActionMode!=null)
+                		mActionMode.finish();
                 	
 
                 	SparseBooleanArray pos=lv.getCheckedItemPositions();
@@ -439,7 +443,71 @@ public class DashBoard extends Activity implements OnQueryTextListener{
  
     }
     
-   
+    public class ActionBarCallBack implements ActionMode.Callback {
+    	int count;
+    	OfflineData sqlHelper = new OfflineData(DashBoard.this, OfflineData.database, null, OfflineData.database_version);
+    	
+    	public ActionBarCallBack(int count){
+    		this.count=count;
+    		
+    	}
+    	  
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        	Log.d("Action button clicked","hello");
+        	if(idArray!=null)
+        		idArray.clear();
+        	
+        	for(int i=0;i<lv.getCount();i++){
+        		View v = lv.getChildAt(i);
+        		if(v!=null){
+        			//Log.d("View","Not null");
+        			CheckBox cb =(CheckBox) v.findViewById(R.id.checkBox1);
+        			TextView tv = (TextView) v.findViewById(R.id.noticeId);
+        			
+        			if(cb.isChecked()){
+        				idArray.add(Integer.parseInt(tv.getText().toString()));
+        			}
+        		}
+        	}
+        	for(int i=0;i<idArray.size();i++){
+        		Log.d("Checked Ids: ",""+idArray.get(i));
+        		myDb = sqlHelper.getWritableDatabase();
+        		//myDb.rawQuery("DELETE FROM "+OfflineData.table1+" WHERE id="+idArray.get(i),null);
+        		//myDb.delete(OfflineData.table1, id+"="+idArray.get(i), null);
+        		myDb.execSQL("delete from "+OfflineData.table1+" where id='"+idArray.get(i)+"'");
+        		Log.d("Cursor contains: ",""+myCursor);
+        		Log.d("Item deleted",""+idArray.get(i));
+        	}
+        	mActionMode.finish();
+        	if(count>0)
+        		count=0;
+        	new LoadAllNotices().execute(flag,null,null);
+        	
+            return false;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+            mode.getMenuInflater().inflate(R.menu.contextual_menu, menu);
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+
+            mode.setTitle(""+count+" Selected");
+            return false;
+        }
+    }
     
  private class MyListAdapter extends ArrayAdapter<HashMap<String,String>>
 	{ 
@@ -490,27 +558,23 @@ public class DashBoard extends Activity implements OnQueryTextListener{
   
     					if(isChecked){
     						count++;
-    						//idArray.add(Integer.parseInt(noticeId.getText().toString()));
-    						//Log.d("Added id",""+idArray);
-    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count,lv));
+    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count));
     					}
     					else{
     						if(count>0){
-    							//int pos=position;
     							count--;
-    							//idArray.remove(new Integer(Integer.parseInt(noticeId.getText().toString())));
     							Log.d("Removed id",""+idArray);
-    							}
-    						//	
-    						if(count>0){
+    						}
     							
-    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count,lv));}
+    						if(count>0){
+    							mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count));}
     						else{
-    						mActionMode.finish();}
+    							mActionMode.finish();
+    						}
     					}
     				}
     			
-    		});
+    			});
     		}
     	return itemView;
     }

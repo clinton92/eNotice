@@ -155,35 +155,38 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 	 public boolean onQueryTextChange(String newText){
 		 // this is your adapter that will be filtered
 		 if (TextUtils.isEmpty(newText)){
-			//lv.clearTextFilter();
-	        //lv.setAdapter(adapter);
-	        	 
+			 adapter.notifyDataSetChanged();
+			
 	     }
-	     else{
-	        //((ArrayAdapter<HashMap<String,String>>)lv.getAdapter()).getFilter().filter(newText);
-	        /*lv.setFilterText(newText.toString());
-	        int textlength = newText.length();
-	        ArrayList<HashMap<String,String>> tempArrayList = new ArrayList<HashMap<String,String>>();
-	        for(HashMap<String,String> c: tempArrayList){
-	               if (textlength <= c.get("title").length()) {
-	                    if (c.get("title").toLowerCase().contains(newText.toString().toLowerCase())) {
-	                       tempArrayList.add(c);
-	                    }
-	               }
-	        }
-	              adapter2 = new MyListAdapter(this,tempArrayList);
-	              lv.setAdapter(adapter2);*/
-	              
-	    }
-	    return true;
-	}
 	    
-	    @Override
-	    public boolean onQueryTextSubmit(String query) {
-	     // TODO Auto-generated method stub
-	    //menu.findItem(R.id.menu_item_search).collapseActionView();
-	     return false;
+	    return true;
+	 }
+	    
+	 @Override
+	 public boolean onQueryTextSubmit(String query) {
+	    String searchString=query;
+	    int textLength=searchString.length();
+	    ArrayList<HashMap<String,String>> originalValues = new ArrayList<HashMap<String,String>>();
+	    
+	    //Copying the notices arraylist before modifying.
+	    for(int i=0;i<noticesList.size();i++)
+	        originalValues.add(noticesList.get(i));
+	    if(noticesList!=null)
+	    	noticesList.clear();
+	    	   
+	    for(int i=0;i<originalValues.size();i++){
+	    	String noticeTitle=originalValues.get(i).get("title").toString();
+	    	if(textLength<=noticeTitle.length()){
+	    		if(searchString.equalsIgnoreCase(noticeTitle.substring(0,textLength))){
+	    			noticesList.add(originalValues.get(i));
+	    		}	    		   
+	    	}
 	    }
+	    
+	    adapter.notifyDataSetChanged();
+	    	   	    	
+	    return false;
+	 }
 	   
 	    @Override
 	    public boolean onOptionsItemSelected(MenuItem item) {

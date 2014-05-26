@@ -1,110 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" 
     android:padding="10dp">
     <EditText 
             android:id="@+id/first"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/first"/>
+            android:hint="@string/first"
+            android:drawableLeft="@drawable/pencil"
+            android:padding="10dp"/>
     <EditText 
             android:id="@+id/last"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/last"/>
+            android:hint="@string/last"
+            android:drawableLeft="@drawable/pencil"
+            android:padding="10dp"/>
     <EditText 
             android:id="@+id/user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/user"/>
+            android:hint="@string/user"
+            android:drawableLeft="@drawable/user"
+            android:padding="10dp"/>
     <EditText 
             android:id="@+id/pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/pass"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:drawableLeft="@drawable/password"
+            android:padding="10dp"/>
     <EditText 
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"/>
+            android:hint="@string/email"
+            android:drawableLeft="@drawable/email"/>
     <EditText 
             android:id="@+id/mob"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/mob"/>
+            android:hint="@string/mob"
+            android:drawableLeft="@drawable/mob"
+            android:padding="10dp"/>
     
-    <!-- <LinearLayout 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/user"/>
-        <EditText 
-            android:id="@+id/user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/user"/>
-         <TextView
-            android:id="@+id/usermsg"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:textColor="#FF0000"/>
-            
-    </LinearLayout>
-    <LinearLayout 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pass"/>
-        <EditText 
-            android:id="@+id/pass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/pass"/>
-        <TextView
-            android:id="@+id/passmsg"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:textColor="#FF0000"/>
-        
-            
-    </LinearLayout>
-    <LinearLayout 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/classname"/>
-       
-        <Spinner
-            android:id="@+id/classname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/class_name"
-		    android:prompt="@string/class_prompt"/>
-        
-        <TextView
-            android:id="@+id/spinmsg"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:textColor="#FF0000"/>
-    </LinearLayout>-->
+    
     <Button
         android:id="@+id/register"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="@string/register"
         android:onClick="registerUser"
-        android:layout_gravity="center"/>   
+        android:layout_gravity="center"
+        android:padding="10dp"/>   
 
 </LinearLayout>
+</ScrollView>

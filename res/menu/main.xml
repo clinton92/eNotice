@@ -12,7 +12,7 @@
         android:icon="@drawable/ic_action_refresh"
         android:orderInCategory="200"
         android:showAsAction="ifRoom"
-        android:title="Load"/>
+        android:title="Refresh"/>
 	    <item
 	        android:id="@+id/post"
 	        android:icon="@drawable/ic_action_new"

@@ -15,7 +15,7 @@
         android:title="Load"/>
 	    <item
 	        android:id="@+id/post"
-	        android:icon="@android:drawable/ic_menu_search"
+	        android:icon="@drawable/ic_action_new"
 	        android:showAsAction="always"
 	        android:title="Post"/>
 

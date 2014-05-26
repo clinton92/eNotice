@@ -1,5 +1,8 @@
 package com.example.enoticeapp;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.app.IntentService;
@@ -7,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
@@ -18,6 +22,11 @@ public class GcmIntentService extends IntentService{
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
     public static final String TAG = "GCM Demo";
+    private String title=null;
+    private String description=null;
+
+    private JSONObject json = null;
+    
 
 	public GcmIntentService() {
 		super("GcmIntentService");
@@ -29,6 +38,7 @@ public class GcmIntentService extends IntentService{
 		// TODO Auto-generated method stub
 		Bundle extras = intent.getExtras();
 		String msg = intent.getStringExtra("message");
+		Log.d("Message Received",""+msg);
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 		String messageType = gcm.getMessageType(intent);
 		
@@ -66,21 +76,38 @@ public class GcmIntentService extends IntentService{
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
         
-        Intent myintent = new Intent(this, ShowNotice.class);
+        Intent myintent = new Intent(this, DashBoard.class);
         myintent.putExtra("message", msg);
+        Log.d("message to be processed",""+msg);
+        processJSON(msg);
+        Uri sound = Uri.parse("android.resource://com.example.enoticeapp/"+R.raw.notify);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
         		myintent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_enotice)
-        .setContentTitle("GCM Notification")
+        .setContentTitle(title)
         .setStyle(new NotificationCompat.BigTextStyle()
-        .bigText(msg))
-        .setContentText(msg);
+        .bigText(description))
+        .setContentText(description)
+        .setSound(sound);
+       // mBuilder.sound = 
 
         mBuilder.setContentIntent(contentIntent);
+        
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 	
+	private void processJSON(String msg){
+		try{
+			json = new JSONObject(msg);
+			title = json.getString("title");
+			description = json.getString("description");
+		}
+		catch(JSONException e){
+			Log.d("GCMIntentService","Exception in JSON: ");
+			e.printStackTrace();
+		}
+	}
 }

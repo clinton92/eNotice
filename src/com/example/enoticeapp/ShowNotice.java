@@ -70,6 +70,18 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
 		tv1.setText(myCursor.getString(1));
 		Log.d("desc",myCursor.getString(2));
 		tv2.setText(myCursor.getString(2));
+		String filepath= myCursor.getString(4);
+		if(filepath!=null){
+			new Thread(new Runnable(
+					@Override
+					public void run(){
+						downloadFile();
+					}
+			)).start();
+			
+			
+			
+		}
 		/*
 		myDb = sqlHelper.getReadableDatabase();
 		myCursor = myDb.rawQuery("SELECT * FROM notices", null);*//*

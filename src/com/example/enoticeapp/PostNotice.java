@@ -124,43 +124,23 @@ public class PostNotice extends Activity {
     	super.onActivityResult(requestID,resultID,i);
     	if(requestID==2 && resultID==Activity.RESULT_OK){
     		Uri selectedImage=i.getData();
-    		//fName=selectedImage.getLastPathSegment();
     		imagepath=getPath(selectedImage);
-    		 File f = new File(imagepath);
-    		 fName=f.getName();
+    		File f = new File(imagepath);
+    		fName=f.getName();
     		image=(ImageView)findViewById(R.id.imageView1);
-    		//LinearLayout myLayout = new LinearLayout(this);
-    		//myLayout.setOrientation(LinearLayout.VERTICAL);
-    		//View v =  View.inflate(this, R.layout.layout_main, null);//findViewById(android.R.id.content);
-    		 //ImageView Setup
-            //image = new ImageView(this);
-            image.setImageURI(selectedImage);
+    		image.setImageURI(selectedImage);
             image.setVisibility(View.VISIBLE);
-            //image.setLayoutParams(new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            //myLayout.addView(image,350,350);
-            //myLayout.addView(v);
-            //setContentView(myLayout);
-    		
+            
     	}
     	if(requestID==3 &&resultID==this.RESULT_OK){
     		Log.d("hllo","hello");
-    		//Uri selectedImage=i.getData();
-        	Bundle extras = i.getExtras();
-        	
-        	//Log.d("Image path",""+imagepath);
-        	//if(i.hasExtra("data"))
+    		Bundle extras = i.getExtras();
         	Bitmap mBitmap = (Bitmap)extras.get("data");
     		image = (ImageView)findViewById(R.id.imageView1);// new ImageView(this);
         	image.setImageBitmap(mBitmap);
         	image.setVisibility(View.VISIBLE);
         	saveToFile(mFileName,mBitmap);
         	image.setId(R.id.imageView1);
-        	//LinearLayout myLayout = new LinearLayout(this);
-    		//myLayout.setOrientation(LinearLayout.VERTICAL);
-    		//myLayout.addView(image,350,350);
-    		//View v =  View.inflate(this, R.layout.layout_main, null);//findViewById(android.R.id.content);
-            //myLayout.addView(v);
-            //setContentView(myLayout);
         	startScanner();
         	imagepath=mFileName;
         	

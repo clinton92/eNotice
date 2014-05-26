@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +18,7 @@ import android.widget.TextView;
 
 public class ActionBarCallBack implements ActionMode.Callback {
 		int count;
-		ArrayList<Integer>idArray = new ArrayList<Integer>();
+		/*ArrayList<Integer>idArray = new ArrayList<Integer>();
 		//ArrayAdapter<HashMap<String,String>> adapter;
 		public ActionBarCallBack(int count, ArrayList<Integer> idArray){
 			this.count=count;
@@ -24,14 +26,23 @@ public class ActionBarCallBack implements ActionMode.Callback {
 			this.idArray=idArray;
 			
 		
+		}*/
+		ListView lv;
+		public ActionBarCallBack(int count,ListView lv){
+			this.count=count;
+			this.lv=lv;
 		}
 		  
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        	Log.d("Action button clicked","hello");
+        	long [] selected = lv.getCheckedItemIds();
             // TODO Auto-generated method stub
-        	/*for(int i=0;i<lv.getCount();i++)
-        	Log.d("Array of ids",""+idArray.get(i));
-        	*/
+        	int length=selected.length;
+        	if(length>0){
+        	for(int i=0;i<length;i++)
+        	Log.d("Array of ids",""+selected[i]);
+        	}
         	//Log.d("Adapter",""+adapter);
         	//ListView lv=getListView();
         	//lv.setAdapter(adapter);

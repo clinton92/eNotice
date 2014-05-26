@@ -27,7 +27,9 @@ import android.widget.EditText;
 
 
 
+import android.widget.TextView;
 import android.widget.Toast;
+
 
 //import java.io.BufferedReader;
 //import java.io.InputStreamReader;
@@ -43,6 +45,7 @@ public class UserLogin extends Activity {
 	 Button b;
 	 EditText user;
 	 EditText pass;
+	 TextView forgot;
 	 private static final String TAG = "Login";
 	 String jsonData;
 	
@@ -54,6 +57,17 @@ public class UserLogin extends Activity {
         
         user = (EditText)findViewById(R.id.user);
         pass = (EditText)findViewById(R.id.pass);
+        forgot = (TextView)findViewById(R.id.forgot);
+        forgot.setOnClickListener(new View.OnClickListener() {
+
+        	  @Override
+        	  public void onClick(View v) {
+        	    Intent myIntent = new Intent(UserLogin.this,ForgetPassword.class);
+        	    startActivity(myIntent);
+        	  }
+
+        	});
+        
        
          
     }

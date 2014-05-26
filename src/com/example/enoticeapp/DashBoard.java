@@ -18,7 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -37,6 +36,7 @@ import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -74,6 +74,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 	private ProgressDialog pDialog;
 	ListView mListView;
 	 MenuItem menuItem;
+	 TextView noticeId;
 	public ArrayList<Integer> idArray=new ArrayList<Integer>();
 	//ListAdapter adapter;
 	ArrayAdapter<HashMap<String,String>> adapter;
@@ -393,6 +394,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
         	if(menuItem!=null){
     		menuItem.collapseActionView();
             menuItem.setActionView(null);}
+        	lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     		lv.setOnItemClickListener(new OnItemClickListener() {
     			//lv.getListView(); 
                 @Override
@@ -405,7 +407,8 @@ public class DashBoard extends Activity implements OnQueryTextListener{
                 	
 
                 	SparseBooleanArray pos=lv.getCheckedItemPositions();
-                	Log.d("Sparse Array",""+pos);
+                	for(int i=0;i<pos.size();i++)
+                	Log.d("Sparse Array",""+pos.get(i));
                 	title1 = (TextView) view.findViewById(R.id.title);
                 	description1 = (TextView) view.findViewById(R.id.description);
                     if (title1 != null&& description1!=null)
@@ -441,7 +444,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
  private class MyListAdapter extends ArrayAdapter<HashMap<String,String>>
 	{ 
     	Context mContext;
-    	TextView noticeId;
+    	
     	ArrayList<HashMap<String,String>> noticesList;
 		public MyListAdapter(Context mContext, ArrayList<HashMap<String,String>> noticesList)
 		{
@@ -475,6 +478,9 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 			noticeId.setText(map.get(TAG_ID));
 			//lv=getListView();
 			CheckBox checkbox =(CheckBox) itemView.findViewById(R.id.checkBox1);
+			//if(){
+				
+			//}
     		if(checkbox!=null){
     			checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
         	  
@@ -484,21 +490,21 @@ public class DashBoard extends Activity implements OnQueryTextListener{
   
     					if(isChecked){
     						count++;
-    						idArray.add(Integer.parseInt(noticeId.getText().toString()));
-    						Log.d("Added id",""+idArray);
-    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count, idArray));
+    						//idArray.add(Integer.parseInt(noticeId.getText().toString()));
+    						//Log.d("Added id",""+idArray);
+    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count, lv));
     					}
     					else{
     						if(count>0){
     							//int pos=position;
     							count--;
-    							idArray.remove(new Integer(Integer.parseInt(noticeId.getText().toString())));
+    							//idArray.remove(new Integer(Integer.parseInt(noticeId.getText().toString())));
     							Log.d("Removed id",""+idArray);
     							}
     						//	
     						if(count>0){
     							
-    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count,idArray));}
+    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count,lv));}
     						else{
     						mActionMode.finish();}
     					}

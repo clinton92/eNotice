@@ -2,30 +2,54 @@ package com.example.enoticeapp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 
 import com.example.enoticeapp.SimpleGestureFilter.SimpleGestureListener;
 
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 import java.util.HashMap;
 
 public class ShowNotice extends Activity implements SimpleGestureListener{
 	TextView tv1,tv2;
 	private SimpleGestureFilter detector;
+	 Bitmap bitmap = null;
+     //InputStream in = null; 
 	public static int position;
 	public static int num;
+	private Uri uri;
+	private String filepath;
+	private String filephonepath;
 	Intent myIntent;
 	SQLiteDatabase myDb;
+	ImageView image;
+	// Progress Dialog
+	private ProgressDialog pDialog;
 	OfflineData sqlHelper = new OfflineData(this, OfflineData.database, null, OfflineData.database_version);
 	Cursor myCursor;
 	HashMap<String,String> map;
@@ -46,15 +70,10 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
         
 		tv1 = (TextView)findViewById(R.id.textView1);
 		tv2 = (TextView)findViewById(R.id.textView2);
+		image = (ImageView) findViewById(R.id.imageView1);
+				
 		Intent myIntent = getIntent();
-		/*if(myIntent.hasExtra("title")){
-			tv1.setText(myIntent.getStringExtra("title"));
-		}
-		if(myIntent.hasExtra("description")){
-			tv2.setText(myIntent.getStringExtra("description"));
-		}*/
 		if(myIntent.hasExtra("id")){
-			//int id = myIntent.getIntExtra("TAG_ID",);
 			int id=myIntent.getIntExtra("id", 0);
 			Log.d("Received in Intent",""+id);
 			getDataFromLocalDB(id);
@@ -70,35 +89,148 @@ public class ShowNotice extends Activity implements SimpleGestureListener{
 		tv1.setText(myCursor.getString(1));
 		Log.d("desc",myCursor.getString(2));
 		tv2.setText(myCursor.getString(2));
-		String filepath= myCursor.getString(4);
+		filepath= myCursor.getString(4);
+		Log.d("Filepath for downloading",""+filepath);
 		if(filepath!=null){
-			new Thread(new Runnable(
-					@Override
-					public void run(){
-						downloadFile();
-					}
-			)).start();
-			
-			
-			
+			new DownloadImage().execute(filepath);
+			 
 		}
-		/*
-		myDb = sqlHelper.getReadableDatabase();
-		myCursor = myDb.rawQuery("SELECT * FROM notices", null);*//*
-    	if (myCursor.getCount()!=0){
-    		myCursor.moveToFirst();
-    		do {
-    			Log.d("Dashboard shownotice", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
-    			tv1.setText(myCursor.getString(1));
-    	//		flag=myCursor.getInt(0);
-    		}while(myCursor.moveToNext());
-    	  		
-    	}else
-    		Log.d("Empty","empty");
-    		*/
-    	
+		
 	}
 	
+	private class DownloadImage extends AsyncTask<String,Void,Bitmap>{
+		
+		@Override
+		public void onPreExecute(){
+			
+		}
+		
+		@Override
+		public Bitmap doInBackground(String ...args){
+			String URL=args[0];
+			Bitmap bitmap = null;
+	        InputStream in = null;        
+	        try {
+	            in = OpenHttpConnection(URL);
+	            bitmap = BitmapFactory.decodeStream(in);
+	            in.close();
+	        } catch (IOException e1) {
+	            // TODO Auto-generated catch block
+	            e1.printStackTrace();
+	        }
+			
+			return bitmap;
+		}
+		
+		@Override
+		public void onPostExecute(Bitmap bmp){
+			image = (ImageView)findViewById(R.id.imageView1);
+			image.setImageBitmap(bmp);
+			image.setVisibility(View.VISIBLE);
+			//startScanner();
+			//pDialog.dismiss();	
+		}
+		
+		private InputStream OpenHttpConnection(String urlString) 
+			    throws IOException
+			    {
+			        InputStream in = null;
+			        int response = -1;
+			               
+			        URL url = new URL(urlString); 
+			        URLConnection conn = url.openConnection();
+			                 
+			        if (!(conn instanceof HttpURLConnection))                     
+			            throw new IOException("Not an HTTP connection");
+			        
+			        try{
+			            HttpURLConnection httpConn = (HttpURLConnection) conn;
+			            httpConn.setAllowUserInteraction(false);
+			            httpConn.setInstanceFollowRedirects(true);
+			            httpConn.setRequestMethod("GET");
+			            httpConn.connect(); 
+
+			            response = httpConn.getResponseCode();                 
+			            if (response == HttpURLConnection.HTTP_OK) {
+			                in = httpConn.getInputStream();                                 
+			            }                     
+			        }
+			        catch (Exception ex)
+			        {
+			            throw new IOException("Error connecting");            
+			        }
+			        return in;     
+			    }
+		
+	}
+	
+	
+	
+/*	public void downloadFile(){
+		/*ImageLoader imgLoader = new ImageLoader(getApplicationContext());
+		//imgLoader.DisplayImage(filepath, loader, image);
+		 pDialog = new ProgressDialog(ShowNotice.this);
+         pDialog.setMessage("Loading notices. Please wait...");
+         pDialog.setIndeterminate(false);
+         pDialog.setCancelable(true);
+         pDialog.show();
+         
+         new Thread(new Runnable(){
+				@Override
+				public void run(){
+					 Intent intent = new Intent(ShowNotice.this, DownloadService.class);
+				 	    // Create a new Messenger for the communication back
+				 	    Messenger messenger = new Messenger(handler);
+				 	    intent.putExtra("MESSENGER", messenger);
+				 	    intent.setData(Uri.parse(filepath));
+				 	    intent.putExtra("urlpath", filepath);
+				 	    startService(intent);
+				 	    
+		//		 	   pDialog.dismiss();
+				}
+		}).start();
+        
+       
+	}
+	
+	private Handler handler = new Handler() {
+	    public void handleMessage(Message message) {
+	      Object path = message.obj;
+	      if (message.arg1 == RESULT_OK && path != null) {
+	    	  Log.d("Downloaded",path.toString());
+	        Toast.makeText(ShowNotice.this,
+	            "Downloaded" + path.toString(), Toast.LENGTH_LONG).show();
+	        filephonepath= path.toString();
+	        
+	        if(filephonepath!=null){
+	        	startScanner();
+	        	/*File f = new File(filephonepath);
+	        	
+				Uri uri =Uri.fromFile(f);//filephonepath;
+				Log.d("Phone path",""+uri);*/
+	      /*  	if(uri!=null){
+	        		image.setImageURI(uri);
+	        		image.setVisibility(View.VISIBLE);
+	        	}
+			}
+	        pDialog.dismiss();
+	      } else {
+	        Toast.makeText(ShowNotice.this, "Download failed.",Toast.LENGTH_LONG).show();
+	      }
+	    };
+	  };
+	 */ 
+	  private void startScanner() {
+	    	Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+	    	File f = new File(filephonepath);
+	    	uri = Uri.fromFile(f);
+	    	//fName=fileUri.getLastPathSegment();
+	    	//Log.d("Simple FileName",fName);
+	    	Log.d("link for gallery",""+uri);
+	    	scanIntent.setData(uri);
+	    	this.sendBroadcast(scanIntent);
+	    }
+	  
 	@Override
     public boolean dispatchTouchEvent(MotionEvent me){
         // Call onTouchEvent of SimpleGestureFilter class

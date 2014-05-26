@@ -6,10 +6,12 @@ import org.json.JSONObject;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -91,6 +93,9 @@ public class GcmIntentService extends IntentService{
         .setStyle(new NotificationCompat.BigTextStyle()
         .bigText(description))
         .setContentText(description)
+        .setTicker(description)
+        .setVibrate(new long[] { 1000, 1000, 1000 })
+        .setLights(Color.RED, 3000, 3000)
         .setSound(sound);
        // mBuilder.sound = 
 

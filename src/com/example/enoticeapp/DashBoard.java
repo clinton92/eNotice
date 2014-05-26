@@ -188,18 +188,20 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 	    @Override
 	    public boolean onOptionsItemSelected(MenuItem item) {
 	      switch (item.getItemId()) {
-	      case R.id.menu_load:
-	        menuItem = item;
-	        menuItem.setActionView(R.layout.progressbar);
-	        menuItem.expandActionView();
-	         new LoadAllNotices().execute(flag,null,null);
-	        //task.execute("test");
-	        break;
-	      case R.id.post:
-	    	  Intent myIntent = new Intent(this,PostNotice.class);
-	    	  startActivity(myIntent);
-	      default:
-	        break;
+	      	case R.id.menu_load:
+	      		//Showing progress spinner on refresh in action bar
+	      		menuItem = item;
+	        	menuItem.setActionView(R.layout.progressbar);
+	        	menuItem.expandActionView();
+	        	//	Doing refreshing
+	        	new LoadAllNotices().execute(flag,null,null);
+	        	//task.execute("test");
+	        	break;
+	      	case R.id.post:
+	      		Intent myIntent = new Intent(this,PostNotice.class);
+	      		startActivity(myIntent);
+	      	default:
+	      		break;
 	      }
 	      return true;
 	    }
@@ -207,15 +209,14 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_dash_board);//
+		setContentView(R.layout.layout_dash_board);
+		
+		
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
 	        | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
-		///Toast.makeText(this, "ping 1", Toast.LENGTH_LONG).show();
-		Log.d("ping1", "1");
 		
-		myDb = sqlHelper.getReadableDatabase();
-    	
+	    // Clearing the previous hashmap
     	if(noticesList!=null)//
     		noticesList.clear();
     	if(map!=null)
@@ -223,9 +224,10 @@ public class DashBoard extends Activity implements OnQueryTextListener{
     	if(count>0)
     		count=0;
     	
-    	//Showing local db entries in Log and setting flag with last id.
+    	//Setting flag with last received id.
+    	myDb = sqlHelper.getReadableDatabase();
     	myCursor = myDb.rawQuery("SELECT * FROM notices", null);
-    	//myDb.close();
+    	
     	if (myCursor.getCount()!=0){
     		myCursor.moveToFirst();
     		do {
@@ -236,13 +238,9 @@ public class DashBoard extends Activity implements OnQueryTextListener{
     	}else
     		Log.d("Empty","empty");
     	
-    	
-    	Toast.makeText(getApplicationContext(), ""+flag, Toast.LENGTH_LONG).show();
+    	//Loading notices on creating activity
     	new LoadAllNotices().execute(flag,null,null);
     	
-    	
-    	
-        
      }
 	
 	
@@ -271,7 +269,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
         }
  
         /**
-         * Getting All Notices from URLarg0
+         * Getting All Notices from URL
          * 
          */
         protected String doInBackground(Integer... args) {
@@ -282,8 +280,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
             int fl =args[0];
             String uri= url_all_notices+fl;
             Log.d("details",url_all_notices);
-            //Toast.makeText(getApplicationContext() , url_all_notices, Toast.LENGTH_LONG).show();
-            //Toast.makeText(, url_all_notices, Toast.LENGTH_LONG).show();
+           
             HttpPost myConnection = new HttpPost(uri);
             
             try {
@@ -337,10 +334,8 @@ public class DashBoard extends Activity implements OnQueryTextListener{
         						e.printStackTrace();
         					}
         					
-        					//updating local db
+        					// Updating local db
         					insertNoticeInLocalDB();
-        					
-        					
         					
         				}
 
@@ -371,9 +366,8 @@ public class DashBoard extends Activity implements OnQueryTextListener{
             //Fetching data from local db
             myDb = sqlHelper.getReadableDatabase();
             myCursor = myDb.rawQuery("SELECT * FROM "+OfflineData.table1,null);
-            //myDb.close();
             myCursor.moveToFirst();
-            //HashMap<String, String> map; 
+           
     		do {
     			HashMap<String, String> map = new HashMap<String, String>();
     			map.put(TAG_ID, ""+myCursor.getInt(0));
@@ -386,17 +380,20 @@ public class DashBoard extends Activity implements OnQueryTextListener{
     			flag=myCursor.getInt(0);
     		}while(myCursor.moveToNext());
             
-    		 adapter=new MyListAdapter(DashBoard.this,noticesList);
+    		adapter=new MyListAdapter(DashBoard.this,noticesList);
         	lv= (ListView) findViewById(R.id.list);
     		lv.setAdapter(adapter);
     		lv.setTextFilterEnabled(true);
-    	//lv.getCheckedItemPositions();
+    	
         	if(menuItem!=null){
-    		menuItem.collapseActionView();
-            menuItem.setActionView(null);}
+        		menuItem.collapseActionView();
+        		menuItem.setActionView(null);
+        	}
+        	
+        	// Setting up onClick Listener
         	lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     		lv.setOnItemClickListener(new OnItemClickListener() {
-    			//lv.getListView(); 
+    			
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                         int position, long id) {
@@ -441,6 +438,9 @@ public class DashBoard extends Activity implements OnQueryTextListener{
         }
  
     }
+    
+   
+    
  private class MyListAdapter extends ArrayAdapter<HashMap<String,String>>
 	{ 
     	Context mContext;
@@ -492,7 +492,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
     						count++;
     						//idArray.add(Integer.parseInt(noticeId.getText().toString()));
     						//Log.d("Added id",""+idArray);
-    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count, lv));
+    						mActionMode = DashBoard.this.startActionMode(new ActionBarCallBack(count,lv));
     					}
     					else{
     						if(count>0){

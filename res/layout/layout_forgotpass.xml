@@ -3,18 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/resetpassspeech"
+        android:layout_gravity="center"
+        android:padding="20dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/resetinfo"
+        android:textColor="#666666"
+        android:padding="10dp"/>
     <EditText 
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/entermob"
+        android:hint="@string/enteruser"
+        android:drawableLeft="@drawable/user"
+        android:drawablePadding="5dp"
+        android:padding="10dp"
         />
     <Button 
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:onClick="getPassword"
-        android:text="@string/getpass"/>
+        android:text="@string/resetpass"
+        android:drawableLeft="@drawable/reset"
+        android:drawablePadding="5dp"
+        
+        android:layout_gravity="center"/>
 
 </LinearLayout>

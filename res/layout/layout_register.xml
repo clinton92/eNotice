@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/first"
             android:drawableLeft="@drawable/pencil"
+            android:drawablePadding="5dp"
             android:padding="10dp"/>
     <EditText 
             android:id="@+id/last"
@@ -20,6 +21,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/last"
             android:drawableLeft="@drawable/pencil"
+            android:drawablePadding="5dp"
             android:padding="10dp"/>
     <EditText 
             android:id="@+id/user"
@@ -27,6 +29,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/user"
             android:drawableLeft="@drawable/user"
+            android:drawablePadding="5dp"
             android:padding="10dp"/>
     <EditText 
             android:id="@+id/pass"
@@ -35,12 +38,14 @@
             android:hint="@string/pass"
             android:inputType="textPassword"
             android:drawableLeft="@drawable/password"
+            android:drawablePadding="5dp"
             android:padding="10dp"/>
     <EditText 
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
+            android:drawablePadding="5dp"
             android:drawableLeft="@drawable/email"/>
     <EditText 
             android:id="@+id/mob"
@@ -48,6 +53,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/mob"
             android:drawableLeft="@drawable/mob"
+            android:drawablePadding="5dp"
             android:padding="10dp"/>
     
     
@@ -58,6 +64,10 @@
         android:text="@string/register"
         android:onClick="registerUser"
         android:layout_gravity="center"
+        android:drawablePadding="5dp"
+        android:drawableLeft="@drawable/pencil"
+        android:paddingTop="10dp"
+        android:gravity="center"
         android:padding="10dp"/>   
 
 </LinearLayout>

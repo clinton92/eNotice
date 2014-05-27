@@ -18,14 +18,17 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:drawableLeft="@drawable/user"
+        android:drawablePadding="5dp"
         android:hint="@string/user"/>
         
      <EditText 
         android:id="@+id/pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:padding="10dp"
+        android:inputType="textPassword"
         android:drawableLeft="@drawable/password"
+        android:drawablePadding="5dp"
         android:hint="@string/pass"/>
 
      <TextView

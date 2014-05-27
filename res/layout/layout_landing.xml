@@ -18,8 +18,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/button2"
         android:layout_centerHorizontal="true"
-        android:text="Login"
-        android:onClick= "login"/>
+        android:text="@string/login"
+        android:onClick= "login"
+        android:drawableLeft="@drawable/key"
+        />
 
     <Button
         android:id="@+id/button2"
@@ -29,6 +31,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="70dp"
         android:text="@string/register" 
-        android:onClick="register"/>
+        android:onClick="register"
+        android:drawableLeft="@drawable/pencil"
+       />
 
 </RelativeLayout>

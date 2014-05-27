@@ -24,5 +24,6 @@
     <string name="forgot">Forget Password?</string>
     <string name="enteruser">Enter your Username</string>
     <string name="resetpass">Reset Password</string>
+    <string name="admin">Admin Panel</string>
 
 </resources>

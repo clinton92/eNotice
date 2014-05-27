@@ -107,6 +107,7 @@ public final class R {
     }
     public static final class string {
         public static final int action_settings=0x7f080001;
+        public static final int admin=0x7f080017;
         public static final int app_name=0x7f080000;
         public static final int class_prompt=0x7f080008;
         public static final int classname=0x7f080007;

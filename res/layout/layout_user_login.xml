@@ -44,7 +44,8 @@
          android:layout_width="200dp"
          android:layout_height="wrap_content"
          android:onClick="login"
-         
+         android:drawableLeft="@drawable/key"
+         android:gravity="center"
          android:layout_gravity="center"/>
 
 </LinearLayout>

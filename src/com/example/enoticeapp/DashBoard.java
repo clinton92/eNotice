@@ -155,7 +155,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 	 public boolean onQueryTextChange(String newText){
 		 // this is your adapter that will be filtered
 		 if (TextUtils.isEmpty(newText)){
-			 adapter.notifyDataSetChanged();
+			 //adapter.notifyDataSetChanged();
 			
 	     }
 	    

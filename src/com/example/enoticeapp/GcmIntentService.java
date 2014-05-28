@@ -11,6 +11,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -85,10 +87,10 @@ public class GcmIntentService extends IntentService{
         Uri sound = Uri.parse("android.resource://com.example.enoticeapp/"+R.raw.notify);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
         		myintent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+       
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-        .setSmallIcon(R.drawable.ic_enotice)
+        .setSmallIcon(R.drawable.ic_enotice_small)
         .setContentTitle(title)
         .setStyle(new NotificationCompat.BigTextStyle()
         .bigText(description))

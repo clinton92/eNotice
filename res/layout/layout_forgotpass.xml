@@ -15,13 +15,22 @@
         android:layout_height="wrap_content"
         android:text="@string/resetinfo"
         android:textColor="#666666"
-        android:padding="10dp"/>
+        android:padding="20dp"/>
     <EditText 
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enteruser"
         android:drawableLeft="@drawable/user"
+        android:drawablePadding="5dp"
+        android:padding="10dp"
+        />
+    <EditText 
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enterpass"
+        android:drawableLeft="@drawable/password"
         android:drawablePadding="5dp"
         android:padding="10dp"
         />

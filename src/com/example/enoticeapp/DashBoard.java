@@ -84,7 +84,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 	public static ArrayList<HashMap<String, String>> noticesList = new ArrayList<HashMap<String, String>>();
 	public static HashMap<String,String> map;
 	// url to get all products list
-	private static String url_all_notices = "http://192.168.43.165/get_notices.php?flag=";
+	private static String url_all_notices = "http://davinder.in/get_notices.php?flag=";
 	// JSON Node names
 	private static final String TAG_SUCCESS = "success";
 	private static final String TAG_NOTICE = "notice";
@@ -237,7 +237,7 @@ public class DashBoard extends Activity implements OnQueryTextListener{
     			//Log.d("Dashboard SQLite", myCursor.getInt(0)+", "+myCursor.getString(1)+", "+myCursor.getString(2));
     			flag=myCursor.getInt(0);
     		}while(myCursor.moveToNext());
-    	  		Toast.makeText(this, ""+flag, Toast.LENGTH_SHORT).show();
+    	  		//Toast.makeText(this, ""+flag, Toast.LENGTH_SHORT).show();
     	}else
     		Log.d("Empty","empty");
     	
@@ -325,10 +325,10 @@ public class DashBoard extends Activity implements OnQueryTextListener{
         					formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         					try{
         						myDate = formatter.parse(datetime);
-        						if(myDate==new Date())
-        							date = timeFormat.format(myDate.getTime());
-        						else
-        							date = dateFormat.format(myDate);
+        						//if(myDate==new Date())
+        							//date = timeFormat.format(myDate.getTime());
+        						//else
+        							date = dateFormat.format(myDate.getDate());
         						
         						Log.d(date,date);
         					
@@ -542,8 +542,8 @@ public class DashBoard extends Activity implements OnQueryTextListener{
 			TextView description=(TextView)itemView.findViewById(R.id.description);
 			description.setText(map.get("description"));
 			
-			TextView date=(TextView)itemView.findViewById(R.id.date);
-			date.setText(map.get("date"));
+			//TextView date=(TextView)itemView.findViewById(R.id.date);
+			//date.setText(map.get("date"));
 			
 			noticeId=(TextView)itemView.findViewById(R.id.noticeId);
 			noticeId.setText(map.get(TAG_ID));

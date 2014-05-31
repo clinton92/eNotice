@@ -59,7 +59,7 @@ public class PostNotice extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_post);
-        upLoadServerUri = "http://192.168.43.165/UploadToServer.php";
+        upLoadServerUri = "http://davinder.in/UploadToServer.php";
 
     }
     @Override
@@ -201,9 +201,9 @@ public class PostNotice extends Activity {
   
     public void uploadData(String title, String description, String filename){
     	Log.d("Hello","hello");
-    	String url = "http://192.168.43.165/insertData.php";
+    	String url = "http://davinder.in/insertData.php";
     	
-    	filepath="http://192.168.43.165/uploads/";
+    	filepath="http://davinder.in/uploads/";
     	if(filename!=null)
     		filepath+=filename;
     	else

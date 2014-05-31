@@ -180,7 +180,7 @@ public class Register extends Activity{
         private void sendRegistrationIdToBackend() {
 		      // Your implementation here.
 
-				String url = "http://192.168.43.165/getdevice.php";
+				String url = "http://davinder.in/getdevice.php";
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 	            params.add(new BasicNameValuePair("regid", regid));
 	            params.add(new BasicNameValuePair("first",first.getText().toString().trim()));

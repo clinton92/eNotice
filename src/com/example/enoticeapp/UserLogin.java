@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 //import java.io.BufferedReader;
 //import java.io.InputStreamReader;
 import java.util.*;
@@ -80,7 +81,7 @@ public class UserLogin extends Activity {
     	 
               
     			   DefaultHttpClient httpclient = new DefaultHttpClient();
-    			   HttpPost httppost = new HttpPost("http://192.168.43.165/login.php"); // make sure the url is correct.
+    			   HttpPost httppost = new HttpPost("http://davinder.in/login.php"); // make sure the url is correct.
     			  
     			   Log.d(TAG,"Connection Done!");
     			   //	add your data
@@ -114,8 +115,15 @@ public class UserLogin extends Activity {
     		    				startActivity(myIntent);
     		    			//}
     		    		}
-    		    		else
-    		    			Toast.makeText(UserLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+    		    		else{
+    		    			runOnUiThread(new Runnable(){
+    	            			@Override
+    	            			public void run(){
+    	            				Toast.makeText(UserLogin.this, "Invalid Username or Password", Toast.LENGTH_SHORT).show();
+    	            			}
+    	            		});
+    		    		}
+    		    			
     		    	}
     		    	catch(JSONException e){
     		    		Log.d(JSON_TAG,"Exception: ");
